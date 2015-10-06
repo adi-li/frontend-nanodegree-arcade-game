@@ -1,4 +1,9 @@
+// use strict mode
 'use strict';
+
+// Tile rectangle constants
+var TILE_WIDTH = 101,
+    TILE_HEIGHT = 83;
 
 // frame object for storing rect data and manipulating collision checking
 var Frame = function(x, y, width, height) {
@@ -35,7 +40,7 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
 
     this.speed = 0;
-    this.frame = new Frame(0, 0, 101, 80);
+    this.frame = new Frame(0, 0, TILE_WIDTH, 80);
 
     this.init();
 };
@@ -51,14 +56,14 @@ Enemy.prototype.init = function() {
 
 // Get a random speed from Enemy.SPEEDS array
 Enemy.prototype.randomSpeed = function() {
-    this.speed = Enemy.SPEEDS[Math.round(Math.random() * (Enemy.SPEEDS.length - 1))];
+    this.speed = this.constructor.SPEEDS[Math.round(Math.random() * (Enemy.SPEEDS.length - 1))];
 };
 
 // Get a random y position
 Enemy.prototype.randomPosition = function() {
-    var row = Math.round(Math.random() * 3);
-    this.frame.x = -101;
-    this.frame.y = row * 83 + 50;
+    var row = Math.round(Math.random() * 2 + 1);
+    this.frame.x = -TILE_WIDTH;
+    this.frame.y = row * TILE_HEIGHT + 50;
 };
 
 // Update the enemy's position, required method for game
@@ -67,12 +72,12 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    this.frame.x += dt * this.speed;
     if (this.frame.x > 600) {
-        this.frame.x = Math.round(Math.random() * 10) * -101;
+        this.frame.x = Math.round(Math.random() * 10) * -TILE_WIDTH;
         this.randomSpeed();
         this.randomPosition();
     }
+    this.frame.x += dt * this.speed;
 };
 
 // Draw the enemy on the screen, required method for game
@@ -107,6 +112,7 @@ Player.prototype.update = function() {
     // to show the reason)
     if (this.shouldDie) {
         this.resetPosition();
+        this.shouldDie = false;
     }
 
     // check if player is collided with any enemy
@@ -114,6 +120,11 @@ Player.prototype.update = function() {
     this.shouldDie = allEnemies.some(function(enemy){
         return enemy.frame.isIntersectWithFrame(myFrame);
     });
+
+    // check if player is dropping on water
+    if (!this.shouldDie) {
+        this.shouldDie = (this.row == 0);
+    }
 };
 
 Player.prototype.render = function() {
@@ -123,8 +134,8 @@ Player.prototype.render = function() {
 
 Player.prototype.frame = function() {
     return new Frame(
-        this.col * 101 + 18,
-        this.row * 83 + 50,
+        this.col * TILE_WIDTH + 18,
+        this.row * TILE_HEIGHT + 50,
         66,
         80
     );
@@ -146,25 +157,24 @@ Player.prototype.handleInput = function(input) {
             break;
         default:
             break;
-    };
+    }
 };
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies = [
-    new Enemy(),
-    new Enemy(),
-    new Enemy(),
-];
+var allEnemies = [],
+    player = new Player();
 
-var player = new Player();
+for (var i = 0; i < 3; i++) {
+    allEnemies.push(new Enemy());
+}
 
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keydown', function(e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',

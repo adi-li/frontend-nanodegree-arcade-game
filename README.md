@@ -1,6 +1,13 @@
 frontend-nanodegree-arcade-game
 ===============================
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+1. Open index.html in modern browser, e.g. Google Chrome
+1. Start playing~~
 
-for self-checking their submission.
+
+Please use `←`, `↑`, `→`, `↓` to control the player movement.
+
+DO NOT jump into water, or collide with the bugs.
+Otherwise you will start from the bottom again.
+
+Keep alive and fun~~
