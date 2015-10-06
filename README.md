@@ -7,7 +7,7 @@ frontend-nanodegree-arcade-game
 
 Please use `←`, `↑`, `→`, `↓` to control the player movement.
 
-DO NOT jump into water, or collide with the bugs.
+**DO NOT** jump into water, or collide with the bugs.
 Otherwise you will start from the bottom again.
 
-Keep alive and fun~~
+Keep alive and have fun~~
